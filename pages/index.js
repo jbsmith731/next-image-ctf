@@ -15,13 +15,21 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Image
-        src="//images.ctfassets.net/y5ykcn2kalx0/2zXWRcVC2xISPXduyRRARi/b4759e9c63765c2cad539e605646a2ee/photo-1639569263958-cedab9df5fae"
-        width={400}
-        height={300}
-        alt=""
-        loader={myLoader}
-      />
+      <div>
+        <Image
+          src="//images.ctfassets.net/y5ykcn2kalx0/2zXWRcVC2xISPXduyRRARi/b4759e9c63765c2cad539e605646a2ee/photo-1639569263958-cedab9df5fae"
+          width={400}
+          height={300}
+          alt=""
+          loader={myLoader}
+        />
+      </div>
+
+      <br />
+      <br />
+      <br />
+
+      <a href="https://github.com/jbsmith731/next-image-ctf">Github Repository</a>
     </div>
   )
 }
