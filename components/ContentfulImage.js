@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 const ContentfulImageCtx = createContext();
@@ -7,32 +7,53 @@ const contentfulLoader = ({ src, width, quality }) => {
   return `https:${src}&w=${width}&q=${quality || 75}`;
 };
 
-const ContentfulImage = ({ src, ...props }) => {
+const ContentfulImage = ({ src, alt, ...props }) => {
   const format = useContext(ContentfulImageCtx);
 
   return (
-    // eslint-disable-next-line jsx-a11y/alt-text
     <Image
       src={`${src}?fm=${format || ''}`}
       loader={contentfulLoader}
       data-format={format}
+      alt={alt || ""}
       {...props}
     />
   );
 }
 
 export const ContentfulImageProvider = ({ value, children }) => {
-  // Use a ref for the value so if it updates on re-render or new page
-  // we keep the original value. It's expected to be null on page change
-  // becuse that's what we return if `!req` inside getInitialProps
-  const format = useRef(value);
+  const [format, setFormat] = useState(value);
+
+  useEffect(() => {
+    if (value != null) {
+      setFormat(value);
+    }
+  }, [value]);
   
   return (
-    <ContentfulImageCtx.Provider value={format.current}>
+    <ContentfulImageCtx.Provider value={format}>
       {children}
     </ContentfulImageCtx.Provider>
   )
 };
+
+export const getServerSideImageSupport = (req) => {
+  let imageSupport = null;
+
+  if (req?.headers?.accept) {
+    const match = req.headers.accept.match(/(webp|avif)/g);
+
+    if (!match) {
+      imageSupport = 'empty strings';
+    } else if (match.includes('avif')) {
+      imageSupport = 'avif'
+    } else if (match.includes('webp')) {
+      imageSupport = 'webp'
+    }
+  }
+
+  return imageSupport;
+}
 
 const testImageSupport = async (format) => {
   if (!self.createImageBitmap) return false;
