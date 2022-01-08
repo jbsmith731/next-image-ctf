@@ -50,10 +50,10 @@ export const getServerSideImageSupport = (req) => {
 
     if (!match) {
       imageSupport = '';
-    } else if (match.includes('avif')) {
-      imageSupport = 'avif'
-    } else if (match.includes('webp')) {
-      imageSupport = 'webp'
+    } else if (match?.includes('avif')) {
+      imageSupport = 'avif';
+    } else if (match?.includes('webp')) {
+      imageSupport = 'webp';
     }
   }
 
@@ -77,9 +77,8 @@ export const useImageImageSupport = () => {
     (async () => {
       const avif = await testImageSupport('avif');
 
-      if (avif) {
-        return
-      }
+      // No need to update state here. Avif is default
+      if (avif) return;
 
       const webp = await testImageSupport('webp');
 
